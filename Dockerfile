@@ -21,6 +21,8 @@ FROM python:${PYTHON_VERSION}
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update --fix-missing && apt-get install -qy --no-install-recommends \
+    aspell \
+    aspell-en \
     ca-certificates \
     curl \
     gnupg \
@@ -62,3 +64,12 @@ RUN curl -s -o /usr/local/bin/rfcstrip https://raw.githubusercontent.com/mbj4668
 
 RUN curl -s -o /usr/local/bin/rfcdiff https://raw.githubusercontent.com/ietf-tools/rfcdiff/refs/heads/main/rfcdiff \
     && chmod 755 /usr/local/bin/rfcdiff
+
+RUN groupadd --force --gid 1000 editor && \
+    useradd -s /bin/bash --uid 1000 --gid 1000 -m editor 
+
+RUN mkdir -p /workspace
+WORKDIR /workspace
+
+USER editor:editor
+COPY files/aspell.en.pws /home/editor/.aspell.en.pws
