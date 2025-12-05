@@ -56,3 +56,6 @@ ENV npm_config_fund=false
 COPY --from=builder /usr/local/bin/bap /usr/local/bin/bap
 COPY --from=builder /usr/local/bin/htmlwdiff /usr/local/bin/htmlwdiff
 COPY --from=builder /usr/local/bin/prep /usr/local/bin/prep
+
+RUN curl -s -o /usr/local/bin/rfcstrip https://raw.githubusercontent.com/mbj4668/rfcstrip/refs/heads/master/rfcstrip\
+    && chmod 755 /usr/local/bin/rfcstrip
