@@ -1,2 +1,4 @@
 rfc2html>=2.0.3
+#rfclint>=0.6.1 # rfclint needs to be repackaged for current pythons
+svgcheck>=0.11.0
 xml2rfc>=3.31.0
