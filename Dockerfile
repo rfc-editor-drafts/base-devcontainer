@@ -1,4 +1,21 @@
 ARG PYTHON_VERSION=3.14-trixie
+
+FROM python:${PYTHON_VERSION} AS builder
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update --fix-missing && apt-get install -qy --no-install-recommends \
+    libfl-dev \
+    flex \
+    yacc 
+
+RUN mkdir /builder \
+ && cd /builder \
+ && git clone https://github.com/ietf-tools/bap.git \
+ && cd bap \
+ && ./configure \
+ && make \
+ && cp bap htmlwdiff prep /usr/local/bin
+
 FROM python:${PYTHON_VERSION}
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -35,3 +52,13 @@ ENV npm_config_loglevel=warn
 ENV npm_config_unsafe_perm=true
 # disable NPM funding messages
 ENV npm_config_fund=false
+
+COPY --from=builder /usr/local/bin/bap /usr/local/bin/bap
+COPY --from=builder /usr/local/bin/htmlwdiff /usr/local/bin/htmlwdiff
+COPY --from=builder /usr/local/bin/prep /usr/local/bin/prep
+
+RUN curl -s -o /usr/local/bin/rfcstrip https://raw.githubusercontent.com/mbj4668/rfcstrip/refs/heads/master/rfcstrip \
+ && chmod 755 /usr/local/bin/rfcstrip
+
+RUN curl -s -o /usr/local/bin/rfcdiff https://raw.githubusercontent.com/ietf-tools/rfcdiff/refs/heads/main/rfcdiff \
+    && chmod 755 /usr/local/bin/rfcdiff
