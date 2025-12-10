@@ -1,5 +1,8 @@
 ARG PYTHON_VERSION=3.14-trixie
 
+# ==========================================
+# BUILDER IMAGE
+# ==========================================
 FROM python:${PYTHON_VERSION} AS builder
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -16,6 +19,9 @@ RUN mkdir /builder \
  && make \
  && cp bap htmlwdiff prep /usr/local/bin
 
+# ==========================================
+# FINAL IMAGE
+# ==========================================
 FROM python:${PYTHON_VERSION}
 
 ENV DEBIAN_FRONTEND=noninteractive
