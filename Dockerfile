@@ -65,6 +65,9 @@ RUN curl -s -o /usr/local/bin/rfcstrip https://raw.githubusercontent.com/mbj4668
 RUN curl -s -o /usr/local/bin/rfcdiff https://raw.githubusercontent.com/ietf-tools/rfcdiff/refs/heads/main/rfcdiff \
     && chmod 755 /usr/local/bin/rfcdiff
 
+COPY scripts/newdupe /usr/local/bin/newdupe
+COPY scripts/newspell /usr/local/bin/newspell
+
 RUN groupadd --force --gid 1000 editor && \
     useradd -s /bin/bash --uid 1000 --gid 1000 -m editor 
 
