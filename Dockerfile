@@ -82,3 +82,12 @@ WORKDIR /workspace
 
 USER editor:editor
 COPY files/aspell.en.pws /home/editor/.aspell.en.pws
+
+# Install required fonts
+RUN mkdir -p ~/.fonts/opentype /tmp/fonts && \
+    wget -q -O /tmp/fonts.tar.gz https://github.com/ietf-tools/xml2rfc-fonts/archive/refs/tags/3.22.0.tar.gz && \
+    tar zxf /tmp/fonts.tar.gz -C /tmp/fonts && \
+    mv /tmp/fonts/*/noto/* ~/.fonts/opentype/ && \
+    mv /tmp/fonts/*/roboto_mono/* ~/.fonts/opentype/ && \
+    rm -rf /tmp/fonts.tar.gz /tmp/fonts/ && \
+    fc-cache -f
