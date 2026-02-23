@@ -33,6 +33,9 @@ RUN apt-get update --fix-missing && apt-get install -qy --no-install-recommends 
     curl \
     gnupg \
     jq \
+    libpango-1.0-0 \
+    libpangoft2-1.0-0 \
+    libharfbuzz-subset0 \
     rsync \
     ruby \
 	  ruby-rubygems \
