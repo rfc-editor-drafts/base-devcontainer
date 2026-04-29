@@ -70,6 +70,9 @@ RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
     apt-get install -y nodejs && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
+# Install aasvg
+RUN npm install -g aasvg@0.4.3
+
 # Add python scripts
 COPY --from=builder /usr/local/bin/bap /usr/local/bin/bap
 COPY --from=builder /usr/local/bin/htmlwdiff /usr/local/bin/htmlwdiff
@@ -107,6 +110,3 @@ RUN mkdir -p ~/.fonts/opentype /tmp/fonts && \
     mv /tmp/fonts/*/roboto_mono/* ~/.fonts/opentype/ && \
     rm -rf /tmp/fonts.tar.gz /tmp/fonts/ && \
     fc-cache -f
-
-# Install aasvg
-RUN npm install -g aasvg@0.4.3
