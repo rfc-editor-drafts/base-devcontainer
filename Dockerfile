@@ -65,6 +65,11 @@ ENV npm_config_loglevel=warn
 ENV npm_config_unsafe_perm=true
 ENV npm_config_fund=false
 
+# Install Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_24.x | bash - && \
+    apt-get install -y nodejs && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # Add python scripts
 COPY --from=builder /usr/local/bin/bap /usr/local/bin/bap
 COPY --from=builder /usr/local/bin/htmlwdiff /usr/local/bin/htmlwdiff
