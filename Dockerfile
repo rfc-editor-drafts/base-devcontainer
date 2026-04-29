@@ -9,7 +9,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update --fix-missing && apt-get install -qy --no-install-recommends \
     libfl-dev \
     flex \
-    yacc 
+    yacc
 
 RUN mkdir /builder \
  && cd /builder \
@@ -31,6 +31,7 @@ RUN apt-get update --fix-missing && apt-get install -qy --no-install-recommends 
     aspell-en \
     ca-certificates \
     curl \
+    gawk \
     gnupg \
     jq \
     libpango-1.0-0 \
@@ -38,7 +39,8 @@ RUN apt-get update --fix-missing && apt-get install -qy --no-install-recommends 
     libharfbuzz-subset0 \
     rsync \
     ruby \
-	  ruby-rubygems \
+    ruby-rubygems \
+    wdiff \
     wget \
     # Remove imagemagick due to https://security-tracker.debian.org/tracker/CVE-2019-10131
     && apt-get purge -y imagemagick imagemagick-6-common
@@ -78,7 +80,7 @@ COPY scripts/newdupe /usr/local/bin/newdupe
 COPY scripts/newspell /usr/local/bin/newspell
 
 RUN groupadd --force --gid 1000 editor && \
-    useradd -s /bin/bash --uid 1000 --gid 1000 -m editor 
+    useradd -s /bin/bash --uid 1000 --gid 1000 -m editor
 
 RUN mkdir -p /workspace
 WORKDIR /workspace
