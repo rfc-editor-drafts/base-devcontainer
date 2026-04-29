@@ -37,6 +37,7 @@ RUN apt-get update --fix-missing && apt-get install -qy --no-install-recommends 
     libpango-1.0-0 \
     libpangoft2-1.0-0 \
     libharfbuzz-subset0 \
+    poppler-utils \
     rsync \
     ruby \
     ruby-rubygems \
@@ -59,19 +60,18 @@ COPY requirements.txt /tmp/pip-tmp/
 RUN pip3 --disable-pip-version-check --no-cache-dir install -r /tmp/pip-tmp/requirements.txt \
     && rm -rf /tmp/pip-tmp
 
-# avoid million NPM install messages
+# Silence npm warnings
 ENV npm_config_loglevel=warn
-# allow installing when the main user is root
 ENV npm_config_unsafe_perm=true
-# disable NPM funding messages
 ENV npm_config_fund=false
 
+# Add python scripts
 COPY --from=builder /usr/local/bin/bap /usr/local/bin/bap
 COPY --from=builder /usr/local/bin/htmlwdiff /usr/local/bin/htmlwdiff
 COPY --from=builder /usr/local/bin/prep /usr/local/bin/prep
 
 RUN curl -s -o /usr/local/bin/rfcstrip https://raw.githubusercontent.com/mbj4668/rfcstrip/refs/heads/master/rfcstrip \
- && chmod 755 /usr/local/bin/rfcstrip
+    && chmod 755 /usr/local/bin/rfcstrip
 
 RUN curl -s -o /usr/local/bin/rfcdiff https://raw.githubusercontent.com/ietf-tools/rfcdiff/refs/heads/main/rfcdiff \
     && chmod 755 /usr/local/bin/rfcdiff
@@ -79,13 +79,19 @@ RUN curl -s -o /usr/local/bin/rfcdiff https://raw.githubusercontent.com/ietf-too
 COPY scripts/newdupe /usr/local/bin/newdupe
 COPY scripts/newspell /usr/local/bin/newspell
 
+# Add editor user/group
 RUN groupadd --force --gid 1000 editor && \
     useradd -s /bin/bash --uid 1000 --gid 1000 -m editor
 
 RUN mkdir -p /workspace
 WORKDIR /workspace
 
+# -------------------------------------
+# Switch to user mode
+# -------------------------------------
 USER editor:editor
+
+# Add aspell
 COPY files/aspell.en.pws /home/editor/.aspell.en.pws
 
 # Install required fonts
@@ -96,3 +102,6 @@ RUN mkdir -p ~/.fonts/opentype /tmp/fonts && \
     mv /tmp/fonts/*/roboto_mono/* ~/.fonts/opentype/ && \
     rm -rf /tmp/fonts.tar.gz /tmp/fonts/ && \
     fc-cache -f
+
+# Install aasvg
+RUN npm install -g aasvg@0.4.3
