@@ -1,5 +1,5 @@
 rfc2html>=2.0.3
 rfclint>=1.0.0
 pyang>=2.7.1
-svgcheck>=0.11.0
+svgcheck>=0.12.0
 xml2rfc[pdf]>=3.34.0
