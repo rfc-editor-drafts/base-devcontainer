@@ -94,6 +94,9 @@ RUN groupadd --force --gid 1000 editor && \
 RUN mkdir -p /workspace
 WORKDIR /workspace
 
+# Trust the /workspace folder
+RUN git config --system --add safe.directory /workspace
+
 # -------------------------------------
 # Switch to user mode
 # -------------------------------------
